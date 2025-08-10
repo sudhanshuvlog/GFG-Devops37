@@ -27,10 +27,10 @@
 # Cmnd_Alias NETWORKING = /sbin/route, /sbin/ifconfig, /bin/ping, /sbin/dhclient, /usr/bin/net, /sbin/iptables, /usr/bin/rfcomm, /usr/bin/wvdial, /sbin/iwconfig, /sbin/mii-tool
 
 ## Installation and management of software
-# Cmnd_Alias SOFTWARE = /bin/rpm, /usr/bin/up2date, /usr/bin/yum
+Cmnd_Alias SOFTWARE = /bin/rpm, /usr/bin/up2date, /usr/bin/yum
 
 ## Services
-# Cmnd_Alias SERVICES = /sbin/service, /sbin/chkconfig, /usr/bin/systemctl start, /usr/bin/systemctl stop, /usr/bin/systemctl reload, /usr/bin/systemctl restart, /usr/bin/systemctl status, /usr/bin/systemctl enable, /usr/bin/systemctl disable
+Cmnd_Alias SERVICES = /sbin/service, /sbin/chkconfig, /usr/bin/systemctl start httpd, /usr/bin/systemctl stop, /usr/bin/systemctl reload, /usr/bin/systemctl restart, /usr/bin/systemctl status, /usr/bin/systemctl enable, /usr/bin/systemctl disable
 
 ## Updating the locate database
 # Cmnd_Alias LOCATE = /usr/bin/updatedb
@@ -98,14 +98,14 @@ Defaults    secure_path = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbi
 ##
 ## Allow root to run any commands anywhere 
 root    ALL=(ALL)       ALL
-dev1    ALL=(ALL)       NOPASSWD: /usr/bin/yum, /usr/bin/systemctl
+dev1    ALL=(ALL)       ALL
 ## Allows members of the 'sys' group to run networking, software, 
 ## service management apps and more.
 # %sys ALL = NETWORKING, SOFTWARE, SERVICES, STORAGE, DELEGATING, PROCESSES, LOCATE, DRIVERS
 
 ## Allows people in group wheel to run all commands
 %wheel  ALL=(ALL)       ALL
-%devs   ALL=(ALL)       NOPASSWD: ALL
+%devs   ALL=(ALL)       SOFTWARE, SERVICES
 ## Same thing without a password
 # %wheel        ALL=(ALL)       NOPASSWD: ALL
 
