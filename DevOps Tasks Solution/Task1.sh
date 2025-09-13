@@ -1,89 +1,110 @@
-#!/bin/bash
+#!/usr/bin/bash
+# DevOps Session 9 - Task 1
+# Script to automate user and group administration using CSV files
+# Author: Training Example
 
-#Reading the files here
-userAndGroupsAddInfo="add-users.csv"
-userDeleteInfo="delete-user-db.csv"
-userGroupDeleteInfo="delete-group-db.csv"
+# -----------------------------
+# Function: Add users & groups
+# -----------------------------
+add_users() {
+    input_file="add-user-db.csv"
+    tail -n +2 $input_file | while IFS=',' read user group
+    do
+        # Create group if it does not exist
+        if getent group $group &>/dev/null
+        then
+            echo "⚠️ Group $group already exists"
+        else
+            groupadd $group
+            echo "✅ Group $group created"
+        fi
 
-addUserAndGroup(){
-# Read CSV and process each line (skipping header)
-tail -n +2 "$userAndGroupsAddInfo" | while IFS=',' read -r User Group; do
-  user=$(echo "$User" | xargs)
-  group=$(echo "$Group" | xargs)
+        # Create user if it does not exist
+        if id $user &>/dev/null
+        then
+            echo "⚠️ User $user already exists"
+        else
+            useradd -m -g $group $user
+            if [ $? -eq 0 ]
+            then
+                echo "✅ User $user created and added to $group"
+            else
+                echo "❌ Failed to create user $user"
+            fi
+        fi
+    done
+}
 
-   # Skip Empty Values
-    if [[ -z "$user" || -z "$group" ]]; then
-     echo "Ivalid line or empty values skipping..."
-      continue
-    fi
+# -----------------------------
+# Function: Delete users
+# -----------------------------
+delete_users() {
+    input_file="delete-user-db.csv"
+    tail -n +2 $input_file | while IFS=',' read user
+    do
+        if id $user &>/dev/null
+        then
+            userdel -r $user
+            echo "🗑️ User $user deleted"
+        else
+            echo "⚠️ User $user does not exist"
+        fi
+    done
+}
 
-   # Create group
-     groupadd "$group"
-     echo "Group "$group" added successfully..."
+# -----------------------------
+# Function: Delete groups
+# -----------------------------
+delete_groups() {
+    input_file="delete-group-db.csv"
+    tail -n +2 $input_file | while IFS=',' read group
+    do
+        if getent group $group &>/dev/null
+        then
+            groupdel $group
+            echo "🗑️ Group $group deleted"
+        else
+            echo "⚠️ Group $group does not exist"
+        fi
+    done
+}
 
+# -----------------------------
+# Function: List users & groups
+# -----------------------------
+list_users_groups() {
+    echo "👤 Current Users:"
+    cut -d: -f1 /etc/passwd | tail -n +10
+    echo ""
+    echo "👥 Current Groups:"
+    cut -d: -f1 /etc/group
+}
 
-   #Check if user exist and if not then add to particular group
-   if id "$user" &> /dev/null; then
-     echo "User "$user" already exists..."
+# -----------------------------
+# Menu-driven program
+# -----------------------------
+while true
+do
+    echo ""
+    echo "========= User & Group Admin ========="
+    echo "1. Add users (from add-user-db.csv)"
+    echo "2. Delete users (from delete-user-db.csv)"
+    echo "3. Delete groups (from delete-group-db.csv)"
+    echo "4. List users and groups"
+    echo "5. Exit"
+    echo "======================================"
+    read -p "Choose an option: " choice
 
-   else
-      useradd -G "$group" "$user"
-      echo "User '$user' added to group '$group'."
-   fi
+    case $choice in
+        1) add_users ;;
+        2) delete_users ;;
+        3) delete_groups ;;
+        4) list_users_groups ;;
+        5) echo "Exiting..."; exit 0 ;;
+        *) echo "Invalid option, try again." ;;
+    esac
+done
 
-  done
-
-   }
-
- deleteUserInfo(){
-
-         # tail added here to just skip the Header in the file, IFS is Internal File Seperator, as in delete file we dont have any so passing blank
-         tail -n +2 "$userDeleteInfo" | while IFS= read -r User; do
-         deleteUser=$(echo "$User"| xargs) #removing extra spaces from values
-
-         #Skip empty rows
-         if [[ -z "$deleteUser" ]]; then
-           echo "Skipping empty or null row values"
-           continue
-         fi
-
-         #Check if user does not exist then throw error
-         if ! id "$deleteUser" &> /dev/null; then
-           echo "User: "$deleteUser" does not exist"
-         fi
-
-         # delete the user
-         if id "$deleteUser" &> /dev/null; then
-          userdel "$deleteUser"
-          echo "User: "$deleteUser" deleted successfully"
-         fi
-
-        done
- }
-
-
-deleteGroup(){
-
-         tail -n +2 "$userGroupDeleteInfo" | while IFS= read -r Group; do
-         deleteGroup=$(echo "$Group" | xargs)
-
-         #Skip empty rows
-         if [[ -z "$deleteGroup" ]]; then
-            echo "Skipping empty rows"
-         fi
-
-         #Check if group exists or not, getent is used to do that
-         if getent group "$deleteGroup"; then
-             groupdel "$deleteGroup"
-             echo "Group "$deleteGroup" group deleted successfully does not exist"
-         fi
-
-        done
- }
-
-
-#Calling the functions
-addUserAndGroup
-deleteGroup
-deleteUserInfo
-   
+## Run the below commands to execute the script
+# chmod +x Task1.sh
+#sudo ./Task1.sh

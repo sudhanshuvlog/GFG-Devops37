@@ -1,34 +1,40 @@
-# Check if file exists before loop
-if [[ ! -f "$directiveInfo" ]]; then
-  logger "Error: File '$directiveInfo' does not exist"
-  exit 1
-fi
+#!/usr/bin/bash
+# DevOps Session 9 - Task 2
+# File System Management: create directories, set permissions, log actions
 
-tail -n +2 "$directiveInfo" | while IFS=',' read -r folder permission; do
-  folderInfo=$(echo "$folder" | xargs)
-  permissionInfo=$(echo "$permission" | xargs)
+INPUT_FILE="directories.csv"
+LOGFILE="fs_manager.log"
 
-  # Check for empty rows
-  if [[ -z "$folderInfo" || -z "$permissionInfo" ]]; then
-    logger " Error: Skipping empty or null row for "$folderInfo" "$permissionInfo""
-    continue
-  fi
+# Start logging
+echo "========== File System Management Run $(date) ==========" >> $LOGFILE
 
-  # Check if directory exists, create if not
-  if [[ ! -d "$folderInfo" ]]; then
-    mkdir -p "$folderInfo"
-    logger "Directory: $folderInfo created"
-  else
-    logger "Directory: $folderInfo already exists"
-  fi
+# Skip the header line and process each row
+tail -n +2 $INPUT_FILE | while IFS=',' read folder perm
+do
+    # Trim spaces (in case CSV has spaces after commas)
+    folder=$(echo $folder | xargs)
+    perm=$(echo $perm | xargs)
 
-  # Assign permissions
-  chmod "$permissionInfo" "$folderInfo"
-  logger "Set Permission $permissionInfo for $folderInfo"
+    # Check if directory exists
+    if [ -d "$folder" ]
+    then
+        echo "⚠️ Directory $folder already exists" | tee -a $LOGFILE
+        chmod $perm $folder
+        echo "🔑 Permissions set to $perm for $folder" | tee -a $LOGFILE
+    else
+        mkdir -p "$folder"
+        if [ $? -eq 0 ]
+        then
+            echo "✅ Directory $folder created" | tee -a $LOGFILE
+            chmod $perm $folder
+            echo "🔑 Permissions set to $perm for $folder" | tee -a $LOGFILE
+        else
+            echo "❌ Failed to create directory $folder" | tee -a $LOGFILE
+        fi
+    fi
+done
 
+## Use the below commands to run the script
+#chmod +x Task2.sh
+#sudo ./Task2.sh
 
- done
-
- #Display the logs using journalctl, tail will limit the records to 20
- echo "most recent logs are being displayed"
- journalctl -xe | tail -n 20
