@@ -1,4 +1,3 @@
-# Base image: lightweight RedHat-like environment (use CentOS or Fedora)
 FROM amazonlinux:latest
 
 # Set maintainer info
@@ -12,7 +11,6 @@ RUN yum -y update && \
     util-linux \
     which \
     procps-ng \
-    coreutils \
     findutils \
     grep \
     shadow-utils \
@@ -22,8 +20,7 @@ RUN yum -y update && \
 WORKDIR /app
 
 # Copy scripts and CSV files into container
-COPY scripts/ /app/scripts/
-COPY *.csv /app/
+COPY * /app/scripts/
 
 # Ensure scripts are executable
 RUN chmod +x /app/scripts/*.sh

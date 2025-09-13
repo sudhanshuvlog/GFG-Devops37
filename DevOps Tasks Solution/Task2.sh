@@ -3,7 +3,7 @@
 # File System Management: create directories, set permissions, log actions
 
 INPUT_FILE="directories.csv"
-LOGFILE="fs_manager.log"
+LOGFILE="Task2.log"
 
 # Start logging
 echo "========== File System Management Run $(date) ==========" >> $LOGFILE
