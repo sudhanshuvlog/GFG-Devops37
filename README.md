@@ -6,3 +6,4 @@ GFG-Devops37 batch content
 * Mario Game - https://github.com/sudhanshuvlog/MarioGameOnDocker/tree/main
 * Python Flask App Repo With CI-CD - https://github.com/sudhanshuvlog/SampleFlaskApp-Devops37.git
 * Snake Game Repo - https://github.com/sudhanshuvlog/SnakeGame
+* Sample Java App Repo - https://github.com/Trainersudhanshu/sample-java-app/tree/main#
