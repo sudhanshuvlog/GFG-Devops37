@@ -7,3 +7,4 @@ GFG-Devops37 batch content
 * Python Flask App Repo With CI-CD - https://github.com/sudhanshuvlog/SampleFlaskApp-Devops37.git
 * Snake Game Repo - https://github.com/sudhanshuvlog/SnakeGame
 * Sample Java App Repo - https://github.com/Trainersudhanshu/sample-java-app/tree/main#
+* K8s MERN App Deployment On EKS - https://github.com/sudhanshuvlog/K8s-MERN-App-Deployment/tree/main
