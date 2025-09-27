@@ -1,0 +1,8 @@
+region: ap-south-1
+instance_type: t2.micro
+security_group: default
+key_name: gfg37ansible
+name: EC2-name
+vpc_subnet_id: subnet-04c1ed6ba9c55ffd7
+image_id: ami-01b6d88af12965bb6
+count: 1

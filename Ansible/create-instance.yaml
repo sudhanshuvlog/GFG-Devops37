@@ -1,0 +1,42 @@
+- hosts: localhost
+  vars_files:
+    - instance_vars.yaml
+    - aws_credentials.yaml
+  tasks:
+    - name: "Install pip3"
+      package:
+        name: python3-pip
+        state: present
+
+    - name: "Install boto3"
+      pip:
+        name: boto3
+
+    - name: "Provision ec2 instances"
+      amazon.aws.ec2_instance:
+        access_key: "{{ access_key }}"
+        secret_key: "{{ secret_key }}"
+        region: "{{ region }}"
+        security_group: "{{ security_group }}"
+        instance_type: "{{ instance_type }}"
+        name: "{{ name }}"
+        key_name: "{{ key_name }}"
+        image_id: "{{ image_id }}"
+        vpc_subnet_id: "{{vpc_subnet_id }}"
+        tags:
+          Environment: Testing
+        count: "{{ count }}"
+      register: ec2
+
+    - debug:
+        var: ec2
+
+    - set_fact:
+        ec2_ips: "{{ ec2.instances |  map(attribute='private_ip_address') | list }}"
+        
+    - debug:
+        var: ec2_ips
+
+    - template:
+        src: inventory.j2
+        dest: inventory
