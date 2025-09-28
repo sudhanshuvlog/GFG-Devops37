@@ -9,3 +9,4 @@ GFG-Devops37 batch content
 * Sample Java App Repo - https://github.com/Trainersudhanshu/sample-java-app/tree/main#
 * K8s MERN App Deployment On EKS - https://github.com/sudhanshuvlog/K8s-MERN-App-Deployment/tree/main
 * Movie Streaming App Devops On EKS - https://github.com/sudhanshuvlog/Movie-Streaming-App-DevOps/tree/main
+* K8s Multi Node Cluster Configuration With Ansible - https://github.com/sudhanshuvlog/kubernetes-multinode-cluster-ansible-aws/tree/main
