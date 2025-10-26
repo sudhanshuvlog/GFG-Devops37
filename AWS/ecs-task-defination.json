@@ -1,0 +1,109 @@
+{
+    "family": "wordpress-application",
+    "containerDefinitions": [
+        {
+            "cpu": 0,
+            "environment": [
+                {
+                    "name": "WORDPRESS_DB_NAME",
+                    "value": "wordpress"
+                },
+                {
+                    "name": "WORDPRESS_DB_USER",
+                    "value": "arn:aws:secretsmanager:ap-south-1:891377007663:secret:mysecret123-HXSv08:username::"
+                },
+                {
+                    "name": "WORDPRESS_DB_PASSWORD",
+                    "value": "arn:aws:secretsmanager:ap-south-1:891377007663:secret:mysecret123-HXSv08:password::"
+                }
+            ],
+            "environmentFiles": [],
+            "essential": true,
+            "image": "wordpress",
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/wordpress-application",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "mountPoints": [
+                {
+                    "containerPath": "/var/www/html",
+                    "readOnly": false,
+                    "sourceVolume": "myvolume"
+                }
+            ],
+            "name": "wordpress",
+            "portMappings": [
+                {
+                    "appProtocol": "http",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "name": "web-port",
+                    "protocol": "tcp"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "WORDPRESS_DB_HOST",
+                    "valueFrom": "arn:aws:secretsmanager:ap-south-1:891377007663:secret:mysecret123-HXSv08:host::"
+                }
+            ],
+            "systemControls": [],
+            "ulimits": [],
+            "volumesFrom": []
+        },
+        {
+            "command": [
+                "--config=/etc/ecs/ecs-cloudwatch-xray.yaml"
+            ],
+            "cpu": 0,
+            "environment": [],
+            "essential": true,
+            "image": "public.ecr.aws/aws-observability/aws-otel-collector:v0.45.1",
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/ecs-aws-otel-sidecar-collector",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "mountPoints": [],
+            "name": "aws-otel-collector",
+            "portMappings": [],
+            "systemControls": [],
+            "volumesFrom": []
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::891377007663:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "volumes": [
+        {
+            "efsVolumeConfiguration": {
+                "fileSystemId": "fs-043fb9af9626ad062",
+                "rootDirectory": "/"
+            },
+            "name": "myvolume"
+        }
+    ],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "enableFaultInjection": false
+}

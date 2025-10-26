@@ -12,3 +12,7 @@ GFG-Devops37 batch content
 * K8s Multi Node Cluster Configuration With Ansible - https://github.com/sudhanshuvlog/kubernetes-multinode-cluster-ansible-aws/tree/main
 * Devops Master Pipeline End to End - https://github.com/sudhanshuvlog/Devops-Master-Pipeline-End-To-End
 * Microservices App - https://github.com/sudhanshuvlog/MicroservicesApp
+* K8s Istio ServiceMesh - https://github.com/sudhanshuvlog/Istio-ServiceMesh-Proj
+* Nginx Ingress Controller - https://github.com/sudhanshuvlog/GFG-Devops37/tree/main/K8s/Ingress%20Controller
+* K8s AutoScaling Practical - https://github.com/sudhanshuvlog/GFG-Devops37/tree/main/K8s/HorizentalAutoScaling
+* Devops 110 Interview Questions - https://docs.google.com/document/d/1ozERaBy6NHabVChsMG3ewtSnSZYWs8WDg4QL1IRW8Ts/edit?usp=sharing
